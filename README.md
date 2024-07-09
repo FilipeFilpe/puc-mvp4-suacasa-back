@@ -32,8 +32,9 @@ Principais funcionalidades:
 - **Documentação**: atráves da lib `flask-openapi3` temos aqui uma rica documentação, podende ser: Swagger, ReDoc ou RapiDoc.
 
 ---
-## Execução da Api
+## Como rodar o projeto
 
+### LOCALMENTE
 Primeiramente temos que instalar as libs presentes em `requirements.txt` com o seguinte comando:
   ```
   pip install -r requirements.txt
@@ -46,5 +47,16 @@ Depois que as libs foram instaladas, podemos executar o projeto com o comando:
   ```
   flask run --host 0.0.0.0 --port 5000 --reload
   ```
+---
+### DOCKER
+Primeiro crie a imagem com o seguinte comando:
+```
+  docker build -t back .
+```
+
+depois rode a imagem com o seguinte comando:
+```
+  docker run -p 0.0.0.0:5000:5000 --name back back
+```
 
 Abra o [http://localhost:5000/](http://localhost:5000/) no navegador para verificar o status da API em execução.

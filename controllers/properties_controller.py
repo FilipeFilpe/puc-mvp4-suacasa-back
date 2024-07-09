@@ -1,21 +1,16 @@
-from urllib.parse import unquote
-
-from flask import redirect
-from flask_cors import CORS
 from flask_openapi3 import APIBlueprint, Tag
 from sqlalchemy.exc import IntegrityError
 
 from logger import logger
-from model import *
-from schemas import *
+from model import Property, Session, Visit
+from schemas import (ErrorSchema, ListPropertiesSchema, PropertyDelSchema,
+                     PropertySchema, PropertySearchSchema, PropertyViewSchema,
+                     VisitSchema, show_properties, show_property)
 
 property_tag = Tag(name="Propriedade", description="Adição, visualização e remoção de propriedades à base")
 property_app = APIBlueprint('property_app', __name__)
 
-def properties():
-  return property_app
-
-@property_app.post('/properties', tags=[property_tag], responses={"200": PropertyViewSchema, "409": ErrorSchema, "400": ErrorSchema})
+@property_app.post('/properties', tags=[property_tag], responses={"200": PropertyViewSchema, "400": ErrorSchema, "400": ErrorSchema})
 def add_property(form: PropertySchema):
     """Adiciona uma nova Propriedade à base de dados
 
@@ -30,8 +25,8 @@ def add_property(form: PropertySchema):
         bathrooms=form.bathrooms,
         garages=form.garages,
         type=form.type,
-        owner=form.owner,
-        thumbnail=form.thumbnail,
+        owner_id=form.owner_id,
+        image=form.image,
     )
     logger.debug(f"Adicionando property de title: '{_property.title}'")
     try:
@@ -42,19 +37,19 @@ def add_property(form: PropertySchema):
         # efetivando o camando de adição de novo item na tabela
         session.commit()
         logger.debug(f"Adicionado property de title: '{_property.title}'")
-        return show_property(_property), 200
+        return show_property(_property), 201
 
     except IntegrityError as e:
         # como a duplicidade do title é a provável razão do IntegrityError
-        error_msg = "Propriedade de mesmo título já salvo na base :/"
+        error_msg = "Propriedade de mesmo título já salva na base :/"
         logger.warning(f"Erro ao adicionar propriedade '{_property.title}', {error_msg}")
-        return {"mesage": error_msg}, 409
+        return {"message": error_msg}, 400
 
     except Exception as e:
         # caso um erro fora do previsto
         error_msg = "Não foi possível salvar novo item :/"
         logger.warning(f"Erro ao adicionar propriedade '{_property.title}', {error_msg}")
-        return {"mesage": error_msg}, 400
+        return {"message": error_msg}, 400
 
 @property_app.get('/properties', tags=[property_tag], responses={"200": ListPropertiesSchema, "404": ErrorSchema})
 def get_properties():
@@ -94,7 +89,7 @@ def get_property(query: PropertySearchSchema):
         # se o property não foi encontrado
         error_msg = "Propriedade não encontrado na base :/"
         logger.warning(f"Erro ao buscar propriedade '{property_id}', {error_msg}")
-        return {"mesage": error_msg}, 404
+        return {"message": error_msg}, 404
     else:
         logger.debug(f"Propriedade econtrada: '{_property.title}'")
         # retorna a representação de propriedade
@@ -110,19 +105,22 @@ def del_property(query: PropertySearchSchema):
     logger.debug("Deletando dados sobre propriedade %s", property_id)
     # criando conexão com a base
     session = Session()
-    # fazendo a remoção
-    count = session.query(Property).filter(Property.id == property_id).delete()
-    session.commit()
+    with session.begin():
+        # fazendo a remoção
+        session.query(Visit).filter(Visit.property == property_id).delete()
+
+        count = session.query(Property).filter(Property.id == property_id).delete()
+        session.commit()
 
     if count:
         # retorna a representação da mensagem de confirmação
         logger.debug("Deletado propriedade com id %s", property_id)
-        return {"mesage": "Propriedade removida", "id": property_id}
+        return {"message": "Propriedade removida", "id": property_id}
     else:
         # se o propriedade não foi encontrado
         error_msg = "Propriedade não encontrado na base :/"
         logger.warning(f"Erro ao deletar propriedade #'{property_id}', {error_msg}")
-        return {"mesage": error_msg}, 404
+        return {"message": error_msg}, 404
 
 @property_app.post('/property/visit', tags=[property_tag], responses={"200": PropertyViewSchema, "404": ErrorSchema})
 def add_visit(form: VisitSchema):
@@ -156,3 +154,7 @@ def add_visit(form: VisitSchema):
 
     # retorna a representação da propriedade
     return show_property(_property), 200
+
+
+def properties():
+  return property_app

@@ -10,13 +10,13 @@ from model import Base
 class Client(Base):
   __tablename__ = 'clients'
 
-  id = Column("pk_client", Integer, primary_key=True)
+  id = Column(Integer, primary_key=True)
   name = Column(String(255))
   email = Column(String(150), unique=True)
   phone = Column(String(11))
   created_at = Column(DateTime, default=datetime.now())
 
-  properties = relationship("Property")
+  properties = relationship("Property", cascade="all, delete")
 
   def __init__(
     self,

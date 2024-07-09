@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Union
 
-from model import Base
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+
+from model import Base
 
 
 class Visit(Base):
@@ -13,7 +14,7 @@ class Visit(Base):
     email = Column(String(150))
     phone = Column(String(150))
     date = Column(String(150))
-    property = Column(Integer, ForeignKey("properties.pk_property"), nullable=False)
+    property = Column(Integer, ForeignKey("properties.id"), nullable=False)
 
     created_at = Column(DateTime, default=datetime.now())
 

@@ -12,10 +12,9 @@ size_base: float = 55.45
 rooms_base: int = 2
 bathrooms_base: int = 1
 garages_base: int = 1
-owner_base: int = 1
+owner_id_base: int = 1
 type_base: str = "Apartamento"
-# thumbnail_base: str = "https://pointer.com.br/blog/wp-content/uploads/2021/02/5a8c590ea936140d7f6def44.jpg"
-thumbnail_base: str = "01.jpg"
+image_base: str = "https://pointer.com.br/blog/wp-content/uploads/2021/02/5a8c590ea936140d7f6def44.jpg"
 
 class PropertySchema(BaseModel):
     """ Define como uma nova propriedade é apresentada
@@ -27,9 +26,9 @@ class PropertySchema(BaseModel):
     rooms: int = rooms_base
     bathrooms: int = bathrooms_base
     garages: int = garages_base
-    owner: int = owner_base
+    owner_id: int = owner_id_base
     type: str = type_base
-    thumbnail: str = thumbnail_base
+    image: str = image_base
 
 class PropertyWithIdSchema(PropertySchema):
     """ Define uma nova propriedade com id
@@ -64,8 +63,9 @@ def show_properties(properties: List[Property]):
             "bathrooms": property.bathrooms,
             "garages": property.garages,
             "type": property.type,
-            "thumbnail": property.thumbnail,
-            "owner": property.owner,
+            "image": property.image,
+            "owner_id": property.owner_id,
+            "owner": property.owner.name,
         })
 
     return {"properties": result}
@@ -82,8 +82,8 @@ class PropertyViewSchema(BaseModel):
     bathrooms: int = bathrooms_base
     garages: int = garages_base
     type: str = type_base
-    thumbnail: str = thumbnail_base
-    owner: str = owner_base
+    image: str = image_base
+    owner_id: str = owner_id_base
     visits:List[VisitSchema]
 
 class PropertyDelSchema(BaseModel):
@@ -107,8 +107,11 @@ def show_property(property: Property):
         "bathrooms": property.bathrooms,
         "garages": property.garages,
         "type": property.type,
-        "thumbnail": property.thumbnail,
-        "owner": property.owner,
+        "image": property.image,
+        "owner_id": property.owner_id,
+        "owner": {
+            "name": property.owner.name
+        },
         "visits": [
             {
                 "name": v.name,

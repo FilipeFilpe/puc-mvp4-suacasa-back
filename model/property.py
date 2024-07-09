@@ -10,7 +10,7 @@ from model import Base, Visit
 class Property(Base):
     __tablename__ = 'properties'
 
-    id = Column("pk_property", Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     title = Column(String(250), unique=True)
     address = Column(String(150))
     value = Column(Float)
@@ -19,10 +19,12 @@ class Property(Base):
     bathrooms = Column(Integer)
     garages = Column(Integer)
     type = Column(String(100))
-    thumbnail = Column(String(500))
+    image = Column(String(500))
+
+    visits = relationship("Visit", cascade="all,delete", backref="parent")
+    owner_id = Column(Integer, ForeignKey("clients.id"), nullable=False)
     
-    visits = relationship("Visit")
-    owner = Column(Integer, ForeignKey("clients.pk_client"), nullable=False)
+    owner = relationship("Client")
 
     created_at = Column(DateTime, default=datetime.now())
 
@@ -36,8 +38,8 @@ class Property(Base):
         bathrooms: int,
         garages: int,
         type: str,
-        thumbnail: str,
-        owner:int,
+        image: str,
+        owner_id:int,
         created_at:Union[DateTime, None] = None
     ):
         """
@@ -51,7 +53,7 @@ class Property(Base):
             rooms: property rooms
             bathrooms: property bathrooms
             bathgaragesrooms: property garages
-            owner: property owner
+            owner_id: property owner
             created_at: created date in database
         """
         self.title = title
@@ -62,8 +64,8 @@ class Property(Base):
         self.bathrooms = bathrooms
         self.garages = garages
         self.type = type
-        self.owner = owner
-        self.thumbnail = thumbnail
+        self.owner_id = owner_id
+        self.image = image
 
         # se não for informada, será o data exata da inserção no banco
         if created_at:

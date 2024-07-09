@@ -14,15 +14,28 @@ class ClientSchema(BaseModel):
     """
     name: str = name_base
     email: str = email_base
-    phone: float = phone_base
+    phone: str = phone_base
 
 class ClientViewSchema(BaseModel):
     """ Define como um cliente será retornado.
     """
     name: str = name_base
     email: str = email_base
-    phone: float = phone_base
+    phone: str = phone_base
     properties: List[ClientSchema]
+
+class ClientDelSchema(BaseModel):
+    """ Define como deve ser a estrutura do dado retornado após uma requisição
+        de remoção.
+    """
+    message: str
+    title: str
+
+class ClientSearchSchema(BaseModel):
+    """ Define como deve ser a estrutura que representa a busca. Que será
+        feita apenas com base no id da propriedade.
+    """
+    id: int = 1
 
 class ClientWithIdSchema(ClientViewSchema):
     """ Define um novo client com id
@@ -49,7 +62,7 @@ def show_clients(clients: List[Client]):
                 {
                     "id": v.id,
                     "title": v.title,
-                    "thumbnail": v.thumbnail,
+                    "image": v.image,
                 }
                 for v in client.properties
             ],
