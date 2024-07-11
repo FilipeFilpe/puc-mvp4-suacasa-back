@@ -2,27 +2,13 @@
 
 A **API - Sua Casa** fornece serviços para imobiliarias, facilitando o contato com o cliente.
 
-Principais funcionalidades:
-- **Cadastro de propriedade**: cadastro de propriedades;
-- **Exclusão de uma propriedade**: exclusão de determinada propriedade atráves de se ID;
-- **Listagem de propriedades**: traz todas as propriedades cadastradas;
-- **Cadastro de visitas**: marcação de visita para uma determinada propriedade;
-- **Listagem das visitas**: lista as visitas de cada propriedade.
+## Principais funcionalidades
+- **Gerenciamento de propriedades:** criação e exclusão de propriedades de diversos tipos, como casas, apartamentos, lotes, etc;
+- **Gerenciamento de clientes:** criação e exclusão de clientes;
+- **Agendamento de visitas:** agende e marque visitas as propriedades;
+- **Dashboard:** principais informações da aplicação.
 
-![Print da documentação SWagger](./static/images/swagger.png "Print da Documemntação Swagger")
-
----
-## Implementação das funcionaidades
-- [x] Cadastro de propriedade;
-- [x] Exclusão de uma propriedade;
-- [x] Listagem de propriedades;
-- [x] Cadastro de visitas;
-- [x] Listagem das visitas;
-- [x] Cadastro do cliente;
-- [x] Listagem dos clientes;
-- [ ] Exclusão de uma visita;
-- [ ] Autenticação;
-- [ ] Fluxo de Compra e Venda.
+![Print da documentação SWagger](./print.jpeg "Print da Documemntação Swagger")
 
 ---
 ## Tecnologias e Arquitetura
