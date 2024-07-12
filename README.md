@@ -37,12 +37,12 @@ Depois que as libs foram instaladas, podemos executar o projeto com o comando:
 ### DOCKER
 Primeiro crie a imagem com o seguinte comando:
 ```
-  docker build -t back .
+  docker build -t mvp-back .
 ```
 
 depois rode a imagem com o seguinte comando:
 ```
-  docker run -p 0.0.0.0:5000:5000 --name back back
+  docker run -p 0.0.0.0:5000:5000 --name mvp-back mvp-back
 ```
 
 Abra o [http://localhost:5000/](http://localhost:5000/) no navegador para verificar o status da API em execução.
